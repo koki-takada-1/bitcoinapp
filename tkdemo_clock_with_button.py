@@ -107,3 +107,5 @@ f = MyFrame(root)
 f.pack()
 f.display()
 root.mainloop()
+
+# 最終行
