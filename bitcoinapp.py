@@ -92,12 +92,6 @@ minute = (all_minutes % 1140) % 60
 
 dt1 = datetime.datetime.now()
 pre = dt1 + datetime.timedelta(days=day, hours=hour, minutes=minute)
-print(f"直近のブロック生成時間{minutes_between}")
-print(f"ブロックの高さ{height}")
-print(f"前回の半減期ブロック数{last_halflife}")
-print(f"次の半減期までの残りブロック数{last_halflife+210000-height}")
-print(f"次の半減期予想時間{pre.year}年{pre.month}月{pre.month}日{pre.month}時{pre.minute}分")
-
 
 def _destroyWindow():
     root.quit()
