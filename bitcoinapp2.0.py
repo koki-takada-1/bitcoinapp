@@ -14,14 +14,14 @@ import webbrowser
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-
+        self.master = master
         # ウィンドウの設定
-        self.master.title("ビットコインダッシュボード")
-        self.master.geometry("1280×720")
+        master.title("ビットコインダッシュボード")
+        master.geometry("1280x720")
         # 実行内容
         # メインフレームを配置
-        self.pack()
-        self.create_widget()
+        self.grid()
+        self.create_widgets()
 
     def create_widgets(self):
         # APIから情報取得
@@ -37,7 +37,7 @@ class Application(tk.Frame):
         halflife = self.height // 210000
         self.last_halflife = 210000 * halflife
 
-        self.minute_between = data_2["self.minute_between_blocks"]
+        self.minute_between = data_2["minutes_between_blocks"]
         all_minutes = (self.last_halflife + 210000 - self.height) * 10  # 10分
         self.day = all_minutes // 1140
         self.hour = (all_minutes % 1140) // 60
@@ -56,15 +56,15 @@ class Application(tk.Frame):
         menu.add_command(label="原論文", command=self.whitepaper)
 
         # チャート表示
-        self.usd_yen()
-        self.usd_btc()
+        self.usd_yen(self.master)
+        self.usd_btc(self.master)
 
         # ビットコイン情報ラベル表示
         self.information_labels()
-        self.chart_button()
+        self.chart_button(self.master)
 
-        # 100ミリ秒後に再度呼び出す
-        self.after(100, self.create_widgets)
+        # 1ミリ秒後に再度呼び出す
+        self.after(1000, self.create_widgets)
 
     def github_open(self):
         webbrowser.open("https://github.com/bitcoin", new=0, autoraise=True)
@@ -85,7 +85,7 @@ class Application(tk.Frame):
             "https://bitcoin.org/files/bitcoin-paper/bitcoin_jp.pdf"
         )
 
-    def usd_yen(self):
+    def usd_yen(self,master):
         dateend = datetime.date.today()
         datestart = dateend - datetime.timedelta(days=15)
         tickerlist = ["DEXJPUS"]
@@ -101,12 +101,12 @@ class Application(tk.Frame):
         ax1.set_title("USD/JPY")
         ax1.set_ylabel("JPY")
         canvas = FigureCanvasTkAgg(
-            fig, master=self.master
+            fig, master=master
         )  # Generate canvas instance, Embedding fig in root
         canvas.draw()
         canvas.get_tk_widget().grid(row=0, column=0, sticky=tk.NW)
 
-    def usd_btc(self):
+    def usd_btc(self,master):
         url = "https://api.blockchain.info/charts/market-price?format=csv"
         res = requests.get(url)
 
@@ -122,7 +122,7 @@ class Application(tk.Frame):
         ax1.set_title("BTC/USD")
         ax1.set_ylabel("USD")
         canvas = FigureCanvasTkAgg(
-            fig2, master=self.master
+            fig2, master=master
         )  # Generate canvas instance, Embedding fig in root
         canvas.draw()
         canvas.get_tk_widget().grid(row=0, column=1, sticky=tk.NE)
@@ -178,21 +178,21 @@ class Application(tk.Frame):
         label5.grid(row=5, column=0, sticky=tk.SW)
         label6.grid(row=10, column=0, columnspan=3, sticky=tk.SE)
 
-    def chart_button(self):
+    def chart_button(self,master):
         button1 = tk.Button(
-            self.master,
+            master,
             text=f"ハッシュレート= {self.hash_rate}",
             font=("MSゴシック", 20, "bold"),
             command=self.chart3,
         )
         button2 = tk.Button(
-            self.master,
+            master,
             text=f"採掘難易度(Difficulty)= {self.difficulty}",
             font=("MSゴシック", 20, "bold"),
             command=self.chart2,
         )
         button3 = tk.Button(
-            self.master,
+            master,
             text=f"BTC/USD＝ {self.market_price_usd}",
             font=("MSゴシック", 20, "bold"),
             command=self.chart1,
@@ -227,12 +227,7 @@ class Application(tk.Frame):
         fig = px.line(df3, x="date", y="Total Hash Rate(TH/s)")
         fig.show()
 
-
-def main():
+if __name__ == "__main__":
     root = tk.Tk()
     app = Application(root)
     app.mainloop()
-
-
-if __name__ == "__main__":
-    main()
