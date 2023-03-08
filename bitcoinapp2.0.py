@@ -1,14 +1,15 @@
-import numpy as np
-import pandas as pd
 import datetime
-import pandas_datareader.data as pdr
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import requests
 import io
-import plotly.express as px
 import tkinter as tk
 import webbrowser
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pandas_datareader.data as pdr
+import plotly.express as px
+import requests
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class Application(tk.Frame):
@@ -63,20 +64,18 @@ class Application(tk.Frame):
         self.information_labels()
         self.chart_button(self.master)
 
-        # 1ミリ秒後に再度呼び出す
+        # 1秒後に再度呼び出す
         self.after(1000, self.create_widgets)
 
     def github_open(self):
-        webbrowser.open("https://github.com/bitcoin", new=0, autoraise=True)
+        webbrowser.open("https://github.com/bitcoin", autoraise=True)
 
     def bitcoin_org(self):
-        webbrowser.open("https://bitcoin.org/ja/", new=0, autoraise=True)
+        webbrowser.open("https://bitcoin.org/ja/", autoraise=True)
 
     def developer_guides(self):
         webbrowser.open(
-            "https://developer.bitcoin.org/devguide/index.html",
-            new=0,
-            autoraise=True,
+            "https://developer.bitcoin.org/devguide/index.html", autoraise=True
         )
 
     def whitepaper(self):
@@ -85,7 +84,7 @@ class Application(tk.Frame):
             "https://bitcoin.org/files/bitcoin-paper/bitcoin_jp.pdf"
         )
 
-    def usd_yen(self,master):
+    def usd_yen(self, master):
         dateend = datetime.date.today()
         datestart = dateend - datetime.timedelta(days=15)
         tickerlist = ["DEXJPUS"]
@@ -106,7 +105,7 @@ class Application(tk.Frame):
         canvas.draw()
         canvas.get_tk_widget().grid(row=0, column=0, sticky=tk.NW)
 
-    def usd_btc(self,master):
+    def usd_btc(self, master):
         url = "https://api.blockchain.info/charts/market-price?format=csv"
         res = requests.get(url)
 
@@ -178,7 +177,7 @@ class Application(tk.Frame):
         label5.grid(row=5, column=0, sticky=tk.SW)
         label6.grid(row=10, column=0, columnspan=3, sticky=tk.SE)
 
-    def chart_button(self,master):
+    def chart_button(self, master):
         button1 = tk.Button(
             master,
             text=f"ハッシュレート= {self.hash_rate}",
@@ -227,7 +226,12 @@ class Application(tk.Frame):
         fig = px.line(df3, x="date", y="Total Hash Rate(TH/s)")
         fig.show()
 
-if __name__ == "__main__":
+
+def main():
     root = tk.Tk()
     app = Application(root)
     app.mainloop()
+
+
+if __name__ == "__main__":
+    main()
