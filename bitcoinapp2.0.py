@@ -12,6 +12,11 @@ import requests
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
+def main():
+    root = tk.Tk()
+    app = Application(root)
+    app.mainloop()
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -225,12 +230,6 @@ class Application(tk.Frame):
         df3.columns = ["date", "Total Hash Rate(TH/s)"]
         fig = px.line(df3, x="date", y="Total Hash Rate(TH/s)")
         fig.show()
-
-
-def main():
-    root = tk.Tk()
-    app = Application(root)
-    app.mainloop()
 
 
 if __name__ == "__main__":
